@@ -36,10 +36,16 @@ class Worker(object):
 
         print "Worker thread exiting..."
 
+
 def main():
+    worker = Worker()
+    worker.start()
+
     app = wx.App(False)
     frame = MainWindow(None, 'Two Pumps Testing')
     app.MainLoop()
+
+    worker.stop()
 
 
 if __name__ == "__main__":
