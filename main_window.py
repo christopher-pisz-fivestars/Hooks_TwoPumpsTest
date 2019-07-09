@@ -21,6 +21,8 @@ class MainWindow(wx.Frame):
 
         self.Bind(wx.EVT_MENU, self.on_about, menu_item_about)
         self.Bind(wx.EVT_MENU, self.on_exit, menu_item_exit)
+        self.Connect(-1, -1, windows_hooks.WX_EVT_MOUSE_LEFT_BUTTON_DOWN_ID,
+                     self.on_hooked_left_button_down)
 
         self.Show(True)
 

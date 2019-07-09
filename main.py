@@ -3,6 +3,16 @@ import threading
 import wx
 from main_window import MainWindow
 
+WX_EVT_CUSTOM_ID = wx.NewId()
+
+
+class MyWxCustomEvent(wx.PyEvent):
+    def __init__(self):
+        self.event_id = WX_EVT_CUSTOM_ID
+        wx.PyEvent.__init__(self)
+        self.SetEventType(self.event_id)
+        self.message = "I like ice cream"
+
 
 class Worker(object):
     def __init__(self):
@@ -32,6 +42,10 @@ class Worker(object):
     def thread_proc(self):
         print "Worker thread started with Id {}".format(threading.current_thread().ident)
         while self.started:
+            if self.window_to_publish_to:
+                custom_event = MyWxCustomEvent()
+                wx.PostEvent(self.window_to_publish_to, custom_event)
+
             pythoncom.PumpWaitingMessages()
 
         print "Worker thread exiting..."
@@ -43,6 +57,7 @@ def main():
 
     app = wx.App(False)
     frame = MainWindow(None, 'Two Pumps Testing')
+    Worker.window_to_publish_to = frame
     app.MainLoop()
 
     worker.stop()
